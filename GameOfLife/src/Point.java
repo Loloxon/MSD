@@ -29,12 +29,12 @@ public class Point {
 
     public void calculateNewState() {
         if(this.currentState==1)
-            if(this.sumAliveNeighbors()>=4 && this.sumAliveNeighbors()<=8)
+            if(this.sumAliveNeighbors()>=2 && this.sumAliveNeighbors()<=5)
                 this.nextState = 1;
             else
                 this.nextState = 0;
         if(this.currentState==0)
-            if(this.sumAliveNeighbors()>=3 && this.sumAliveNeighbors()<=8)
+            if(this.sumAliveNeighbors()>=4 && this.sumAliveNeighbors()<=8)
                 this.nextState = 1;
             else
                 this.nextState = 0;
