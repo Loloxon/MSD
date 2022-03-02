@@ -25,16 +25,14 @@ public class Point {
 		currentState = s;
 	}
 
-    public void setNextState(int s){nextState = s;}
-
 	public void calculateNewState() {
         if(this.currentState==1)
-            if(this.sumAliveNeighbors()>=4 && this.sumAliveNeighbors()<=8)
+            if(this.sumAliveNeighbors()>=2 && this.sumAliveNeighbors()<=5)
                 this.nextState = 1;
             else
                 this.nextState = 0;
         if(this.currentState==0)
-            if(this.sumAliveNeighbors()>=3 && this.sumAliveNeighbors()<=8)
+            if(this.sumAliveNeighbors()>=4 && this.sumAliveNeighbors()<=8)
                 this.nextState = 1;
             else
                 this.nextState = 0;
@@ -42,7 +40,7 @@ public class Point {
 	}
 
 	public void changeState() {
-        currentState = nextState;
+		currentState = nextState;
 	}
 	
 	public void addNeighbor(Point nei) {
@@ -52,15 +50,15 @@ public class Point {
     public int sumAliveNeighbors(){
         int tmp=0;
         for (Point neighbor : neighbors)
-            if (neighbor.getState() >= 1)
+            if (neighbor.getState() == 1)
                 tmp += 1;
         return tmp;
     }
 	//TODO: write method counting all active neighbors of THIS point
 
-    public void drop(){
-        Random random = new Random();
-        if(random.nextInt(100)<5)
-            this.currentState = 6;
-    }
+//    public void drop(){
+//        Random random = new Random();
+//        if(random.nextInt(100)<5)
+//            this.currentState = 6;
+//    }
 }
