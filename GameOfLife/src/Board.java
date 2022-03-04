@@ -18,7 +18,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
     private static final long serialVersionUID = 1L;
     private Point[][] points;
     private int size = 14;
-    private int flag = 0; //0 - life, 1 - rain
+    private int mode = 0; //0 - life, 1 - rain
 
     public Board(int length, int height) {
         addMouseListener(this);
@@ -28,9 +28,17 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
         setOpaque(true);
     }
 
+    public void setMode(int newMode){
+        this.mode = newMode;
+        this.clear();
+        int dlugosc = (this.getWidth() / size) + 1;
+        int wysokosc = (this.getHeight() / size) + 1;
+        initialize(dlugosc, wysokosc);
+    }
+
     // single iteration
     public void iteration() {
-        if(flag==0) {
+        if(mode==0) {
             for (int x = 0; x < points.length; ++x)
                 for (int y = 0; y < points[x].length; ++y)
                     points[x][y].calculateNewState();
@@ -41,7 +49,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
                 points[x][y].changeState();
         this.repaint();
 
-        if(flag==1) {
+        if(mode==1) {
             for (int x = 1; x < points.length - 1; ++x) {
                 points[x][1].drop();
             }
@@ -72,7 +80,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
         for (int x = 0; x < points.length; ++x)
             for (int y = 0; y < points[x].length; ++y)
                 points[x][y] = new Point();
-        if(flag==0) {
+        if(mode==0) {
             for (int x = 1; x < points.length - 1; ++x) {
                 for (int y = 1; y < points[x].length - 1; ++y) {
                     points[x][y].addNeighbor(points[x-1][y-1]);
@@ -87,7 +95,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
                 }
             }
         }
-        if(flag==1) {
+        if(mode==1) {
             for (int x = 1; x < points.length - 1; ++x) {
                 for (int y = 1; y < points[x].length - 1; ++y) {
                     points[x][y].addNeighbor(points[x][y + 1]);
@@ -125,7 +133,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
             g.drawLine(firstX, y, lastX, y);
             y += gridSpace;
         }
-        if(flag==0) {
+        if(mode==0) {
             for (x = 0; x < points.length; ++x) {
                 for (y = 0; y < points[x].length; ++y) {
                     if (points[x][y].getState() != 0) {
@@ -139,7 +147,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
                 }
             }
         }
-        if(flag==1) {
+        if(mode==1) {
             for (x = 0; x < points.length; ++x) {
                 for (y = 0; y < points[x].length; ++y) {
                     if (points[x][y].getState() != 0) {

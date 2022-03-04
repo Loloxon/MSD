@@ -19,6 +19,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Timer timer;
 	private Board board;
+    private JButton mode;
 	private JButton start;
 	private JButton clear;
 	private JSlider pred;
@@ -27,6 +28,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private final int maxDelay = 500;
 	private final int initDelay = 100;
 	private boolean running = false;
+    private int flag = 0;
 
 	public GUI(JFrame jf) {
 		frame = jf;
@@ -42,6 +44,11 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		container.setSize(new Dimension(1024, 768));
 
 		JPanel buttonPanel = new JPanel();
+
+        mode = new JButton("Rain");
+        mode.setActionCommand("Rain");
+        mode.setToolTipText("Change to rain");
+        mode.addActionListener(this);
 
 		start = new JButton("Start");
 		start.setActionCommand("Start");
@@ -60,6 +67,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		pred.addChangeListener(this);
 		pred.setValue(maxDelay - timer.getDelay());
 
+		buttonPanel.add(mode);
 		buttonPanel.add(start);
 		buttonPanel.add(clear);
 		buttonPanel.add(pred);
@@ -80,7 +88,26 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			board.iteration();
 		} else {
 			String command = e.getActionCommand();
-			if (command.equals("Start")) {
+            if (command.equals("Rain") & !running) {
+                flag = (flag+1)%2;
+                if(flag == 0){
+                    mode.setText("Rain");
+                }
+                else{
+                    mode.setText("Life");
+                }
+                board.setMode(flag);
+//                if (!running) {
+//                    timer.start();
+//                    start.setText("Pause");
+//                } else {
+//                    timer.stop();
+//                    start.setText("Start");
+//                }
+//                running = !running;
+//                clear.setEnabled(true);
+            }
+			else if (command.equals("Start")) {
 				if (!running) {
 					timer.start();
 					start.setText("Pause");
