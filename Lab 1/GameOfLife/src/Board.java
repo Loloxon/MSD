@@ -17,7 +17,7 @@ import javax.swing.event.MouseInputListener;
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
     private static final long serialVersionUID = 1L;
     private Point[][] points;
-    private int size = 14;
+    private int size = 2;
     private int mode = 0; //0 - life, 1 - rain
 
     public Board(int length, int height) {
