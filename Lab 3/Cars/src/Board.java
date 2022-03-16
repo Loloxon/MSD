@@ -5,6 +5,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 
+import static java.lang.Math.min;
+
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
     private static final long serialVersionUID = 1L;
     private Point[][] points;
@@ -28,15 +30,59 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
             }
         }
         // TODO
+        for (int x = 0; x < points.length; ++x) {
+            for (int y = 0; y < points[x].length; ++y) {
+                points[x][y].next = points[(x+1)%points.length][y];
+            }
+        }
     }
 
     public void iteration() {
-
         // TODO
+        for (int x = 0; x < points.length; ++x) {
+            for (int y = 0; y < points[x].length; ++y) {
+                points[x][y].moved=false;
+            }
+        }
+
+        for (int x = 0; x < points.length; ++x) {
+            for (int y = 0; y < points[x].length; ++y) {
+                if(points[x][y].type == 1){
+                    points[x][y].v = min(points[x][y].v+1,5);
+                }
+            }
+        }
+
+        for (int x = 0; x < points.length; ++x) {
+            for (int y = 0; y < points[x].length; ++y) {
+                if(points[x][y].type == 1){
+                    Point nextP = points[x][y].next;
+                    int tmpV = 0;
+                    while(tmpV<=points[x][y].v && nextP.type==0){
+                        tmpV +=1;
+                        nextP = nextP.next;
+                    }
+                    points[x][y].v = tmpV;
+                }
+            }
+        }
+
+        int chance = 5;
+        for (int x = 0; x < points.length; ++x) {
+            for (int y = 0; y < points[x].length; ++y) {
+                if(points[x][y].v>0){
+                    int r = (int) ((Math.random() * (100 - 1)) + 1);;
+                    if(r<chance){
+                        points[x][y].v-=1;
+                    }
+                }
+            }
+        }
 
         for (int x = 0; x < points.length; ++x) {
             for (int y = 0; y < points[x].length; ++y) {
                 // TODO
+                points[x][y].move();
             }
         }
         this.repaint();
@@ -85,7 +131,10 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
                 // TODO
                 //g.setColor(new Color(R, G, B, 0.7f));
-
+                if (points[x][y].type==1)
+                    g.setColor(new Color(0,0,0.5f,0.7f));
+                else
+                    g.setColor(new Color(1,1,1,0.7f));
                 g.fillRect((x * size) + 1, (y * size) + 1, (size - 1), (size - 1));
             }
         }

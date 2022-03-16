@@ -57,7 +57,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(timer)) {
             iterNum++;
-            frame.setTitle("Sound simulation (" + Integer.toString(iterNum) + " iteration)");
+            frame.setTitle("Car simulation (" + Integer.toString(iterNum) + " iteration)");
             board.iteration();
         } else {
             String command = e.getActionCommand();
