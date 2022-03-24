@@ -33,6 +33,10 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
         for (int x = 0; x < points.length; ++x) {
             for (int y = 0; y < points[x].length; ++y) {
                 points[x][y].next = points[(x+1)%points.length][y];
+                if(y==3)
+                    points[x][y].left = points[x][(y-1)%points[x].length];
+                if(y==2)
+                    points[x][y].right = points[x][(y+1)%points[x].length];
             }
         }
 
@@ -44,7 +48,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
             }
         }
     }
-
+    int D_M = 7;
     public void iteration() {
         // TODO
         for (int x = 0; x < points.length; ++x) {
@@ -52,25 +56,42 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
                 points[x][y].moved=false;
             }
         }
-
         for (int x = 0; x < points.length; ++x) {
             for (int y = 0; y < points[x].length; ++y) {
-                if(5>points[x][y].type && points[x][y].type >= 1){
-                    points[x][y].v = min(points[x][y].v+1,5);
-                }
-            }
-        }
-
-        for (int x = 0; x < points.length; ++x) {
-            for (int y = 0; y < points[x].length; ++y) {
-                if(5>points[x][y].type && points[x][y].type >= 1){
-                    Point nextP = points[x][y].next;
-                    int tmpV = 0;
-                    while(tmpV<=points[x][y].v && nextP.type==0){
-                        tmpV +=1;
-                        nextP = nextP.next;
+                if(5>points[x][y].type && points[x][y].type > 0){
+                    int D_br=1;
+                    while(points[(points.length+x-D_br)%points.length][3].type==0 && D_br<=D_M+1){
+                        D_br++;
                     }
-                    points[x][y].v = tmpV;
+                    D_br--;
+                    int D_bl=1;
+                    while(points[(points.length+x-D_bl)%points.length][2].type==0 && D_bl<=D_M+1){
+                        D_bl++;
+                    }
+                    D_bl--;
+                    int D_fr=1;
+                    while(points[(points.length+x+D_fr)%points.length][3].type==0 && D_fr<=D_M+1){
+                        D_fr++;
+                    }
+                    D_fr--;
+                    int D_fl=1;
+                    while(points[(points.length+x+D_fr)%points.length][2].type==0 && D_fl<=D_M+1){
+                        D_fl++;
+                    }
+                    D_fl--;
+                    //back
+                    if(y == 2 && D_br>=D_M && D_bl<=D_M && D_fr>=points[x][y].v && points[x][3].type==0 && !points[x][y].moved){
+                        points[x][y].back();
+                    }
+                    //change
+                    else if(y == 3 && points[x][y].v<points[x][y].type*2+1 &&
+                            D_br>=D_M && D_bl>=D_M && D_fl>=points[x][y].v && points[x][2].type == 0 && !points[x][y].moved){
+                        points[x][y].change();
+                    }
+                    //movement
+                    else{
+                        points[x][y].move();
+                    }
                 }
             }
         }
@@ -87,12 +108,12 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 //            }
 //        }
 
-        for (int x = 0; x < points.length; ++x) {
-            for (int y = 0; y < points[x].length; ++y) {
-                // TODO
-                points[x][y].move();
-            }
-        }
+//        for (int x = 0; x < points.length; ++x) {
+//            for (int y = 0; y < points[x].length; ++y) {
+//                // TODO
+//                points[x][y].move();
+//            }
+//        }
         this.repaint();
     }
 
