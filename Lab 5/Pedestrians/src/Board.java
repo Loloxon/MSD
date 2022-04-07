@@ -26,6 +26,9 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
     public void iteration() {
         for (int x = 1; x < points.length - 1; ++x)
             for (int y = 1; y < points[x].length - 1; ++y)
+                points[x][y].blocked=false;
+        for (int x = 1; x < points.length - 1; ++x)
+            for (int y = 1; y < points[x].length - 1; ++y)
                 points[x][y].move();
         this.repaint();
     }
@@ -42,17 +45,50 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
     private void initialize(int length, int height) {
         points = new Point[length][height];
 
+        int Moore = 1;
+
         for (int x = 0; x < points.length; ++x)
             for (int y = 0; y < points[x].length; ++y)
                 points[x][y] = new Point();
 
         for (int x = 1; x < points.length-1; ++x) {
             for (int y = 1; y < points[x].length-1; ++y) {
+                if(Moore==1){
+                    points[x][y].addNeighbor(points[x-1][y]);
+                    points[x][y].addNeighbor(points[x][y-1]);
+                    points[x][y].addNeighbor(points[x][y+1]);
+                    points[x][y].addNeighbor(points[x+1][y]);
+                    points[x][y].addNeighbor(points[x-1][y-1]);
+                    points[x][y].addNeighbor(points[x-1][y+1]);
+                    points[x][y].addNeighbor(points[x+1][y-1]);
+                    points[x][y].addNeighbor(points[x+1][y+1]);
+                }
+                else{
+                    points[x][y].addNeighbor(points[x-1][y]);
+                    points[x][y].addNeighbor(points[x][y-1]);
+                    points[x][y].addNeighbor(points[x][y+1]);
+                    points[x][y].addNeighbor(points[x+1][y]);
+                }
             }
         }
     }
 
     private void calculateField(){
+        ArrayList<Point> toCheck = new ArrayList<Point>();
+        for (int x = 0; x < points.length; ++x) {
+            for (int y = 0; y < points[x].length; ++y) {
+                if (points[x][y].type == 2) {
+                    points[x][y].staticField = 0;
+                    toCheck.addAll(points[x][y].neighbors);
+                }
+            }
+        }
+        while(!toCheck.isEmpty()){
+            Point tmp = toCheck.remove(0);
+            if(tmp.calcStaticField()){
+                toCheck.addAll(tmp.neighbors);
+            }
+        }
     }
 
     protected void paintComponent(Graphics g) {
