@@ -5,6 +5,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -71,6 +72,55 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
                 }
             }
         }
+
+        int board = 1; //0 - nic, 1 - stadion, 2 - idk
+        if(board == 1){
+            int walls = 4;
+            int ppl1 = 70;
+            int ppl2 = 95;
+            for (int x = 1; x < points.length-1; ++x) {         //walls
+                for (int y = 1; y < points[x].length-1; ++y) {
+                    //borders
+                    if(x==1 || x==points.length-2)
+                        points[x][y].type=1;
+                    if(y==1 || y==points[x].length-2)
+                        points[x][y].type=1;
+                    //rows
+                    if(y%walls==0 && x>5 && (x<(points.length-1)/2-5 || x>(points.length-1)/2+5) && x<points.length-6)
+                        points[x][y].type=1;
+                    //entrance
+                    if((y>(points[x].length-1)/2-8 && y<(points[x].length-1)/2+10) &&
+                            (x==(points.length-1)/2-3 || x==(points.length-1)/2+3))
+                        points[x][y].type=1;
+                    if(y==(points[x].length-1)/2-8+1 && (x>(points.length-1)/2-3 && x<(points.length-1)/2+3))
+                        points[x][y].type=1;
+                    if(y==(points[x].length-1)/2-8+2 && (x>(points.length-1)/2-3 && x<(points.length-1)/2+3))
+                        points[x][y].type=2;
+                }
+            }
+
+            for (int x = 1; x < points.length-1; ++x) {         //people
+                for (int y = 1; y < points[x].length-1; ++y) {
+                    if(points[x][y].type==0){
+                        Random rand = new Random(); //instance of random class
+                        int upperbound = 100;
+                        if(x>5 && (x<(points.length-1)/2-5 || x>(points.length-1)/2+5) && x<points.length-6) {//rows
+                            if(rand.nextInt(upperbound)>ppl1) {
+                                points[x][y].isPedestrian=true;
+                            }
+                        }
+                        else{
+                            if(rand.nextInt(upperbound)>ppl2) {
+                                points[x][y].isPedestrian=true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(board == 2){
+
+        }
     }
 
     private void calculateField(){
@@ -122,8 +172,8 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
         for (x = 1; x < points.length-1; ++x) {
             for (y = 1; y < points[x].length-1; ++y) {
                 if(points[x][y].type==0){
-                    float staticField = points[x][y].staticField;
-                    float intensity = staticField/100;
+                    double staticField = points[x][y].staticField;
+                    float intensity = (float)staticField/100;
                     if (intensity > 1.0) {
                         intensity = 1.0f;
                     }
