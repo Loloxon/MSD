@@ -34,13 +34,14 @@ public class Point {
     }
 
 	public void updateVelocity() {
-		// TODO: velocity update
-        if(type==0) {
+        // TODO: velocity update
+        if (type == 0) {
             nVel = nVel - (nNeighbor.pressure - pressure);
             eVel = eVel - (eNeighbor.pressure - pressure);
             wVel = wVel - (wNeighbor.pressure - pressure);
             sVel = sVel - (sNeighbor.pressure - pressure);
         }
+    }
 //        float nVeltmp = nVel - (nNeighbor.pressure - pressure);
 //        float eVeltmp = eVel - (eNeighbor.pressure - pressure);
 //        float wVeltmp = wVel - (wNeighbor.pressure - pressure);

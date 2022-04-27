@@ -70,7 +70,7 @@ public class Point {
                 }
             }
             if(idx==-1) {
-                impatience+=0.25;
+                impatience+=0.75;
                 return;
             }
 
